@@ -42,7 +42,7 @@ from sparseprop.modules import sparsify_conv2d_auto
 sparse_conv = sparsify_conv2d_auto(conv, input_shape, verbose=True)
 ```
 
-Notice that you will need to feed the `input_shape` to this method, which should look something like (`batch_size`, `input_channels`, `input_height`, `input_width`). This method will create two sparse modules, one with `vectorizing_over_on=False` and the other one with `vectorizing_over_on=True`, runs a randomly generated batch through both, and returns the faster module based on forward+backward time.
+Notice that you will need to feed the `input_shape` to this method, which should look something like (`batch_size`, `input_channels`, `input_height`, `input_width`). This method will create two sparse modules, one with `vectorizing_over_on=False` and the other one with `vectorizing_over_on=True`, run a randomly generated batch through both, and return the faster module based on forward+backward time.
 
 #### Sparsifying the whole network
 As explained in the paper, we replace each *Linear* or *Conv2d* layer in a network with a sparse one, if the following conditions are met:
