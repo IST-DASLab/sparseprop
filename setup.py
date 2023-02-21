@@ -9,9 +9,9 @@ out = out.decode('ascii').strip().split()
 
 setup(
     name='sparseprop',
-    version='0.1.6',    
+    version='0.1.7',    
     description='SparseProp: Efficient Sparse Backpropagation for Faster Training of Neural Networks',
-    url='https://github.com/shuds13/pyexample',
+    url='https://github.com/IST-DASLab/sparseprop',
     author='Mahdi Nikdan, Tommaso Pegolotti, Eugenia Iofinova, Eldar Kurtic, Dan Alistarh',
     author_email='mahdi.nikdan@ist.ac.at, tommaso.pegolotti@inf.ethz.ch, eugenia.iofinova@ist.ac.at, eldar.kurtic@ist.ac.at, dan.alistarh@ist.ac.at',
     license='Apache License 2.0',
