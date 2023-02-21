@@ -21,6 +21,25 @@ class SparseConv2d(torch.nn.Module):
         assert bias is None or isinstance(bias, torch.nn.Parameter), f"bias is not a parameter but it's {type(bias)}"
         self.bias = bias
 
+    @staticmethod
+    def from_dense(conv, vectorizing_over_on=False):
+        def bias_to_param():
+            if conv.bias is None:
+                return None
+            return torch.nn.Parameter(conv.bias.data.clone())
+
+        dense_weight = conv.weight.data
+        stride = conv.stride[0]
+        padding = conv.padding[0]
+
+        return SparseConv2d(
+            dense_weight,
+            bias=bias_to_param(),
+            padding=padding,
+            stride=stride,
+            vectorizing_over_on=vectorizing_over_on
+        )
+
     def set_vectorizing_over_on(self, vectorizing_over_on):
         self.vectorizing_over_on = vectorizing_over_on
         self.vectorizing_bwd_over_on = vectorizing_over_on
@@ -74,4 +93,4 @@ class SparseConv2d(torch.nn.Module):
     def __str__(self):
         nnz = len(self.W_val)
         numel = self.OC * self.IC * self.K * self.K
-        return f'SparseConv([{self.OC}, {self.IC}, {self.K}, {self.K}], sp={nnz/numel:.2f}, nnz={nnz}, s={self.stride}, p={self.padding}, voo={self.vectorizing_over_on})'
+        return f'SparseConv2d([{self.OC}, {self.IC}, {self.K}, {self.K}], sp={1. - nnz/numel:.2f}, nnz={nnz}, s={self.stride}, p={self.padding}, voo={self.vectorizing_over_on})'

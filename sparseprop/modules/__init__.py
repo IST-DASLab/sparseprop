@@ -1,9 +1,52 @@
 import torch
 import time
+from copy import deepcopy
 
 from sparseprop.modules.conv2d import SparseConv2d
 from sparseprop.modules.linear import SparseLinear
-from sparseprop.modules.utils import run_and_choose
+
+@torch.enable_grad()
+def run_and_choose(modules, input_shape, verbose=False):
+    if len(modules) == 1:
+        if verbose:
+            print('only one option...')
+        return modules[0]
+
+    X_orig = torch.randn(*input_shape)
+    Y_orig = None
+
+    min_time = 1e10
+    best_module = None
+    for module in modules:
+        module_copy = deepcopy(module)
+        X = X_orig.clone()
+        X.requires_grad_()
+        X.retain_grad()
+
+        temp = time.time()
+        O = module_copy(X)
+        fwd_time = time.time() - temp
+
+        if Y_orig is None:
+            Y_orig = torch.randn_like(O)
+        Y = Y_orig.clone()
+
+        L = torch.mean((O - Y) ** 2)
+        temp = time.time()
+        L.backward()
+        bwd_time = time.time() - temp
+
+        if verbose:
+            print(f'module {module} took {fwd_time} fwd and {bwd_time} bwd')
+
+        full_time = fwd_time + bwd_time
+        if full_time < min_time:
+            min_time = full_time
+            best_module = module
+    
+    if verbose:
+        print(f'going with {best_module} with full time of {min_time}')
+    return best_module
 
 def _sparsify_if_faster_linear(module, input_shape, include_dense, verbose):
     sp = SparseLinear(
@@ -27,7 +70,7 @@ def _sparsify_if_faster_conv2d(conv, input_shape, include_dense, verbose):
     stride = conv.stride[0]
     padding = conv.padding[0]
 
-    sp1 = SparseConv(
+    sp1 = SparseConv2d(
         dense_weight,
         bias=bias_to_param(),
         padding=padding,
@@ -35,7 +78,7 @@ def _sparsify_if_faster_conv2d(conv, input_shape, include_dense, verbose):
         vectorizing_over_on=False
     )
     
-    sp2 = SparseConv(
+    sp2 = SparseConv2d(
         dense_weight,
         bias=bias_to_param(),
         padding=padding,
@@ -57,6 +100,8 @@ def sparsify_if_faster(module, input_shape, include_dense=True, verbose=False):
         assert isinstance(module, torch.nn.Conv2d)
         return _sparsify_if_faster_conv2d(module, input_shape, include_dense, verbose)
 
+def sparsify_conv2d_auto(conv, input_shape, verbose=False):
+    return _sparsify_if_faster_conv2d(conv, input_shape, include_dense=False, verbose=verbose)
 
 class TimingHook:
     def __init__(self, tag=None, verbose=False):

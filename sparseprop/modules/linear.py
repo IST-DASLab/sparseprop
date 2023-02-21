@@ -15,6 +15,13 @@ class SparseLinear(torch.nn.Module):
 
         assert bias is None or isinstance(bias, torch.nn.Parameter), f"bias is not a parameter but it's {type(bias)}"
         self.bias = bias
+    
+    @staticmethod
+    def from_dense(module):
+        return SparseLinear(
+            dense_weight=module.weight.data,
+            bias=None if module.bias is None else torch.nn.Parameter(module.bias.data.clone())
+        )
 
     @property
     def weight(self):
@@ -49,4 +56,4 @@ class SparseLinear(torch.nn.Module):
     def __str__(self):
         nnz = len(self.W_val)
         numel = self.N * self.N
-        return f"SparseLinear([{self.N}, {self.M}], sp={nnz/numel:.2f}, nnz={nnz})"
+        return f"SparseLinear([{self.N}, {self.M}], sp={1. - nnz/numel:.2f}, nnz={nnz})"

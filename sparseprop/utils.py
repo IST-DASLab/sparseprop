@@ -1,5 +1,9 @@
 import torch
-from sparseprop.modules import SparseLinear, SparseConv2d, sparsify_if_faster
+from copy import deepcopy
+
+from sparseprop.modules.linear import SparseLinear
+from sparseprop.modules.conv2d import SparseConv2d
+from sparseprop.modules import sparsify_if_faster
 
 @torch.no_grad()
 def sparsity(module):
