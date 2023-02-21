@@ -46,7 +46,7 @@ Notice that you will need to feed the `input_shape` to this method, which should
 
 #### Sparsifying the whole network
 As explained in the paper, we replace each *Linear* or *Conv2d* layer in a network with a sparse one, if the following conditions are met:
-1. It is at leaset 80% sparse.
+1. It is at least 80% sparse.
 2. The sparse module is faster than the original dense one (in terms of forward+backward time).
 
 This behavior is implemented in the `swap_modules_with_sparse` method in `sparseprop.utils`. For example, if you have a sparse (global or uniform) `model`:
