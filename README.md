@@ -57,7 +57,7 @@ from sparseprop.utils import swap_modules_with_sparse
 sparse_model = swap_modules_with_sparse(model, input_shape, verbose=True)
 ```
 
-Notice that you need to provide the `input_shape` to the model, which is easily accessible through your *DataLoader*. The `swap_modules_with_sparse` method will iterate through the network's layers and replace them with their sparse counterparts if the above two conditions are met.
+Notice that you need to provide the `input_shape` to this method, which is easily accessible through your *DataLoader*. The `swap_modules_with_sparse` method will iterate through the network's layers and replace them with their sparse counterparts if the above two conditions are met.
 
 ## Examples
 In the `examples` folder, you can find multiple python scripts, which will help you get started with *SparseProp*. In order to get persistent timings, we refer you to [this article](https://easyperf.net/blog/2019/08/02/Perf-measurement-environment-on-Linux). You can use your favorite command line tool in case you want to limit the number of CPU cores on which the code executes, e.g., taskset or numactl. Refer to the "Set cpu affinity" section in the same article.
