@@ -16,7 +16,7 @@ This library provides fast PyTorch modules exploiting sparse backpropagation alg
 ## Usage
 
 #### Sparsifying a single layer
-If you have a sparse *Linear* module called `linear`, you can easily convert is to a sparse module using the `from_dense` method.
+If you have a sparse *Linear* module called `linear`, you can easily convert is to a *SparseLinear* module using the `from_dense` method.
 ```
 from sparseprop.modules import SparseLinear
 
