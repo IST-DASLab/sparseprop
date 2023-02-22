@@ -7,7 +7,7 @@ Official implementation of the paper *"SparseProp: Efficient Sparse Backpropagat
 This library provides fast PyTorch modules exploiting sparse backpropagation algorithms described in the paper.
 
 ## Installation
-1. Make sure you have PyTorch installed (Refer to the [PyTorch website](https://pytorch.org)).
+1. Make sure you have PyTorch installed (Refer to the [PyTorch website](https://pytorch.org)). A CPU version will suffice for our purpose.
 2. Install *SparseProp*:
     ```
     pip install sparseprop
