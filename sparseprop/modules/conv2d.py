@@ -90,7 +90,7 @@ class SparseConv2d(torch.nn.Module):
         self.W_idx = W_idx_OC_new, W_idx_IC_new, W_idx_X_new, W_idx_Y_new
         self.set_vectorizing_over_on(sp.vectorizing_over_on)
     
-    def __str__(self):
+    def __repr__(self):
         nnz = len(self.W_val)
         numel = self.OC * self.IC * self.K * self.K
         return f'SparseConv2d([{self.OC}, {self.IC}, {self.K}, {self.K}], sp={1. - nnz/numel:.2f}, nnz={nnz}, s={self.stride}, p={self.padding}, voo={self.vectorizing_over_on})'

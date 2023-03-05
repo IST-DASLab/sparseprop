@@ -53,7 +53,7 @@ class SparseLinear(torch.nn.Module):
         self.W_val = torch.nn.Parameter(W_val)
         self.W_idx = W_idx
 
-    def __str__(self):
+    def __repr__(self):
         nnz = len(self.W_val)
         numel = self.N * self.M
         return f"SparseLinear([{self.N}, {self.M}], sp={1. - nnz/numel:.2f}, nnz={nnz})"
