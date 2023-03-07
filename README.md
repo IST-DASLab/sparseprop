@@ -68,7 +68,7 @@ The files `correctness_linear.py` and `correctness_conv2d.py` will compare the o
 #### Layer-wise performance comparison
 The files `compare_linear.py` and `compare_conv2d.py` will compare the running time of the *SparseLinear* and *SparseConv2d* modules with PyTorch's *Linear* and *Conv2d*, respectively. You will find the results in the `plots` directory. Again, feel free to tweak the parameters in the scripts to compare the runtime in different cases.
 
-#### Sparsr fine-tuning ResNet18 on imagenette
+#### Sparsr fine-tuning of ResNet18 on imagenette
 The file `finetune_resnet18_imagenette.py` finetunes a pretrained sparse ResNet18 model on the imagenette dataset, keeping the sparsity masks fixed. In the `examples/models/` folder, we have also included a 95% uniformly pruned ResNet18 checkpoint trained on imagenet (using the [AC/DC](https://arxiv.org/abs/2106.12379) method). You can use the following command to run this script on 4 cpu cores.
 
 ```
