@@ -80,7 +80,7 @@ Notice that "`0,1,2,3`" are the core numbers, so simply modify that in case your
 The most important arguments of this script are:
 - `--checkpoint-path`: Path to the pretrained checkpoint.
 - `--output-dir`: Path to a directory where you wish to write the results.
-- `--run-dense`: You can use this argument to run this script without using *SparseProp*.
+- `--run-dense`: You can use this argument to run this script without *SparseProp*.
 
 For the complete list of arguments, refer to [here](https://github.com/IST-DASLab/sparseprop/blob/96a8f545461847effe863e4471d1cd80b33fc0a2/examples/finetune_resnet18_imagenette_95_uniform.py#L16).
 
