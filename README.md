@@ -70,7 +70,7 @@ The files `compare_linear.py` and `compare_conv2d.py` will compare the running t
 
 #### Sparse fine-tuning of ResNet18 on imagenette
 
-**For this example to work, you will need to have the *sparseml* library installed, as we use it to conveniently load the imagenette dataset (`pip install sparseml`).**
+For this example to work, you will need to have the *sparseml* library installed, as we use it to conveniently load the imagenette dataset (`pip install sparseml`).
 
 The file `finetune_resnet18_imagenette.py` finetunes a pretrained sparse ResNet18 model on the imagenette dataset, keeping the sparsity masks fixed. In the `examples/models/` folder, we have also included a 95% uniformly pruned ResNet18 checkpoint trained on imagenet (using the [AC/DC](https://arxiv.org/abs/2106.12379) method). You can use the following command to run this script on 4 cpu cores.
 
