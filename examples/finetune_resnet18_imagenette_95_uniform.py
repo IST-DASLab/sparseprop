@@ -88,26 +88,21 @@ if not args.run_dense:
     input_shape = next(iter(train_loader))[0].shape
     model = swap_modules_with_sparse(model, input_shape, inplace=True, verbose=True)
 
-is_sparse = apply_to_all_modules_with_types(model, [torch.nn.Linear, torch.nn.Conv2d], lambda n, m: sparsity(m) > 0.)
-dense_modules_to_keep_sparse = [key for key, value in is_sparse.items() if value]
-
 
 # loss and optim
 loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=5e-3, momentum=0.9, weight_decay=1e-4)
-#schedular = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.8)
-schedular = None
+
 
 # initialize the finetuner
 finetuner = Finetuner(
     model,
     optimizer,
-    schedular,
+    schedular=None,
     loss_fn=loss_fn,
     log_freq=args.log_frequency,
     save_freq=args.save_frequency,
-    logger=logger,
-    dense_modules_to_keep_sparse=dense_modules_to_keep_sparse
+    logger=logger
 )
 
 

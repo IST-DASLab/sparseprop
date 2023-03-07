@@ -6,38 +6,37 @@ from collections import OrderedDict
 from time import time
 
 from sparseprop.modules import SparseLinear, SparseConv2d
-from sparseprop.utils import swap_module
+from sparseprop.utils import swap_module, sparsity
 
 class Finetuner:
-    def __init__(self, model, optimizer, schedular, loss_fn, log_freq, save_freq, logger,
-                 dense_modules_to_keep_sparse=None, device='cpu'):
-        self._model = WrappedModel(model) # wrap for timing
+    def __init__(self, model, optimizer, schedular, loss_fn, log_freq, save_freq, logger):
+        self._model = WrappedModel(model) # wrap for layer-wise timing
         self._optimizer = optimizer
         self._schedular = schedular
         self._loss_fn = loss_fn
         self._log_freq = log_freq
         self._save_freq = save_freq
         self._logger = logger
-        self._device = device
 
-        # store the sparsity mask of dense modules to apply to their gradients
-        self._sparsity_masks = None
-        if dense_modules_to_keep_sparse is not None:
-            with torch.no_grad():
-                self._sparsity_masks = apply_to_all_modules_with_names(
-                    self._model,
-                    dense_modules_to_keep_sparse,
-                    lambda n, m: (m.weight.data != 0).float()
-                )
-        
-        self._model.to(self._device)
+        with torch.no_grad():
+            # we need to keep track of the pruned Linear and Conv2d modules, since we need to mask them after each step
+            is_sparse = apply_to_all_modules_with_types(
+                self._model,
+                [torch.nn.Linear, torch.nn.Conv2d],
+                lambda n, m: sparsity(m) > 0.
+            )
+            dense_modules_to_keep_sparse = [key for key, value in is_sparse.items() if value]
+
+            # store the sparsity mask of dense modules to apply to their weight after each update
+            self._sparsity_masks = apply_to_all_modules_with_names(
+                self._model,
+                dense_modules_to_keep_sparse,
+                lambda n, m: (m.weight.data != 0).float()
+            )
 
     def _step(self, inputs, targets, phase, timings=None):
         assert phase in ['train', 'test']
         train = phase == 'train'
-        
-        inputs = inputs.to(self._device)
-        targets = targets.to(self._device)
 
         if timings is None:
             timings = OrderedDict()
@@ -160,19 +159,6 @@ class Timer(object):
         end = time()
         self._target_dict[self._event_name] = end - self._start
 
-# class Timer:
-#     def __init__(self):
-#         self._starts = {}
-
-#     def start(self, name):
-#         self._starts[name] = time()
-    
-#     def end(self, name):
-#         t = time() - self._starts[name]
-#         del self._starts[name]
-#         return t
-
-
 class TimingHook:
     def __init__(self, tag=None, verbose=False):
         self.clear()
@@ -201,6 +187,11 @@ class WrappedModel(torch.nn.Module):
             hook2.clear()
 
     def _prepare_for_timing(self):
+        # we swap each module with a torch.nn.Sequential consisting of [identity_before, module, identity_after]
+        # we employ hooks for per-layer timing:
+        # for forward: (time right after module's forward) - (time right after identity_before's forward)
+        # for backward: (time right after module's backward) - (time right after identity_after's backward)
+
         backward_hooks, forward_hooks = [], []
         backward_handles, forward_handles = [], []
 
