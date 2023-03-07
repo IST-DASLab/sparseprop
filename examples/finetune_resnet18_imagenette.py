@@ -18,7 +18,7 @@ parser.add_argument('-b','--batch-size', help='batch size for fine-tuning.', typ
 parser.add_argument('-nw','--num-workers', help='number of workers for dataloaders.', type=int, default=4)
 parser.add_argument('-rd', '--run-dense', help='set true to not use sparseprop and run everything dense.', action='store_true', default=False)
 parser.add_argument('-s','--seed', help='manual seed.', type=int, default=10)
-parser.add_argument('-e','--epochs', help='the number of epoch to train.', type=int, default=10)
+parser.add_argument('-e','--epochs', help='the number of epoch to train.', type=int, default=۱)
 parser.add_argument('-sf','--save-frequency', help='how often save the model (in epochs).', type=int, default=2)
 parser.add_argument('-lf','--log-frequency', help='how often to log (in batches).', type=int, default=20)
 parser.add_argument('-cp','--checkpoint-path', dest='ckpt_path', help='path to the pretrained sparse resnet18 checkpoint to be fine-tuned.', type=str, required=True)
