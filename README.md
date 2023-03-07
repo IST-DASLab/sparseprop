@@ -72,7 +72,7 @@ The files `compare_linear.py` and `compare_conv2d.py` will compare the running t
 The file `finetune_resnet18_imagenette.py` finetunes a pretrained sparse ResNet18 model on the imagenette dataset, keeping the sparsity masks fixed. In the `examples/models/` folder, we have also included a 95% uniformly pruned ResNet18 checkpoint trained on imagenet (using the [AC/DC](https://arxiv.org/abs/2106.12379) method). You can use the following command to run this script on 4 cpu cores.
 
 ```
-taskset -c 0,1,2,3 nice -n 5 python finetune_resnet18_imagenette.py --checkpoint-path=models/resnet18_ac_dc_500_epochs_sp\=0.95_uniform.pt --output-dir=results
+taskset -c 0,1,2,3 nice -n 5 python finetune_resnet18_imagenette.py --checkpoint-path=models/resnet18_ac_dc_500_epochs_sp\=0.95_uniform.pt --output-dir=results/resnet18_ac_dc_500_epochs_sp\=0.95_uniform/
 ```
 
 Notice that "`0,1,2,3`" are the core numbers, so simply modify that in case your machine has less than 4 cores. Also "`nice -n 5`" gives a high priority to your process.
