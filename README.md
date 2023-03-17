@@ -2,15 +2,13 @@
 
 Official implementation of the paper *"SparseProp: Efficient Sparse Backpropagation for Faster Training of Neural Networks"*.
 
-[Link to the paper](https://arxiv.org/abs/2302.04852)
-
 This library provides fast PyTorch modules exploiting sparse backpropagation algorithms described in the paper.
 
 ## Installation
 1. Make sure you have PyTorch installed (Refer to the [PyTorch website](https://pytorch.org)). A CPU version will suffice for our purpose.
 2. Install *SparseProp*:
     ```
-    pip install sparseprop
+    pip install .
     ```
 
 ## Usage
@@ -94,7 +92,3 @@ In addition to the loss and accuracy metrics, this script also reports the time 
 - `avg_end_to_end_minibatch`: the average time spent processing a minibatch. This includes forward pass, backward pass, loss calculation, optimization step, etc. Note that loading the data into memory is not included.
 - `avg_module_forward_sum`: the average time spent in the forward function of the modules *torch.nn.Linear*, *torch.nn.Conv2d*, *SparseLinear*, and *SparseConv2d*.
 - `avg_module_backward_sum`: the average time spent in the backward function of the modules *torch.nn.Linear*, *torch.nn.Conv2d*, *SparseLinear*, and *SparseConv2d*.
-
-## Todo
-1. Include outputs of the example scripts in the README.
-2. Prepare an example script for training a sparse model from scratch using gradual magnitude pruning. This will most likely be integrated into [this](https://github.com/IST-DASLab/ACDC) repository.

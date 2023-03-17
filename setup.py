@@ -11,9 +11,9 @@ setup(
     name='sparseprop',
     version='0.1.11',    
     description='SparseProp: Efficient Sparse Backpropagation for Faster Training of Neural Networks',
-    url='https://github.com/IST-DASLab/sparseprop',
-    author='Mahdi Nikdan, Tommaso Pegolotti, Eugenia Iofinova, Eldar Kurtic, Dan Alistarh',
-    author_email='mahdi.nikdan@ist.ac.at, tommaso.pegolotti@inf.ethz.ch, eugenia.iofinova@ist.ac.at, eldar.kurtic@ist.ac.at, dan.alistarh@ist.ac.at',
+    url='https://anonymous.4open.science/r/sparseprop',
+    author='Anonymous Authors',
+    author_email='Anonymous Emails',
     license='Apache License 2.0',
     packages=find_packages(exclude=['tests', 'tests.*']),
     ext_modules=[Extension(
