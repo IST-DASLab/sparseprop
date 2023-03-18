@@ -1,5 +1,5 @@
 import torch
-from sparseprop.modules.utils import to_sparse_format_conv2d
+from sparseprop.modules.utils import to_sparse_format_conv2d, from_sparse_format_conv2d
 from sparseprop.modules.functions import SparseConvFunction
 from sparseprop import backend as sppb
 from copy import deepcopy
@@ -39,6 +39,32 @@ class SparseConv2d(torch.nn.Module):
             stride=stride,
             vectorizing_over_on=vectorizing_over_on
         )
+    
+    def to_dense(self):
+        dense_weight = from_sparse_format_conv2d(
+            self.W_val,
+            self.W_idx,
+            shape=(self.OC, self.IC, self.K, self.K)
+        )
+        
+        conv = torch.nn.Conv2d(
+            self.IC,
+            self.OC,
+            self.K,
+            stride=self.stride,
+            padding=self.padding,
+            bias=self.bias is not None
+        )
+
+        with torch.no_grad():
+            conv.weight.mul_(0)
+            conv.weight.add_(dense_weight)
+
+            if self.bias is not None:
+                conv.bias.mul_(0)
+                conv.bias.add_(self.bias)
+            
+        return conv
 
     def set_vectorizing_over_on(self, vectorizing_over_on):
         self.vectorizing_over_on = vectorizing_over_on

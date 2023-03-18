@@ -27,5 +27,6 @@ PYBIND11_MODULE(backend, m)
     // utils
     m.def("transpose", &transpose_wrapper);
     m.def("sparsify_conv2d", &sparsify_conv2d_wrapper);
+    m.def("densify_conv2d", &densify_conv2d_wrapper);
     m.def("further_sparsify_conv2d", &further_sparsify_conv2d_wrapper);
 }

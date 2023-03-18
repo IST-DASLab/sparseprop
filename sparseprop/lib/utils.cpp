@@ -95,6 +95,28 @@ void sparsify_conv2d(int IC, int OC, int K, float* __restrict__ W, int* __restri
 	}
 }
 
+void densify_conv2d(int IC, int OC, int K, float* __restrict__ W, int* __restrict__ W_idx_OC,
+					 int16_t* __restrict__ W_idx_IC, uint8_t* __restrict__ W_idx_X,
+					 uint8_t* __restrict__ W_idx_Y,float* __restrict__ W_val){	
+
+	 
+	for (int oc = 0; oc < OC; oc++){
+		for (int ic = 0; ic < IC; ic++){
+			int oc_s = W_idx_OC[oc];
+			int ic_s = oc_s + W_idx_IC[(IC + 1) * oc + ic];
+			int ic_e = oc_s + W_idx_IC[(IC + 1) * oc + ic + 1];
+
+			for (int si = ic_s; si < ic_e; si++) {
+				uint8_t i = W_idx_X[si];
+				uint8_t j = W_idx_Y[si];
+				
+				float v = W_val[si];
+				W[IC * K * K * oc + K * K * ic + K * i + j] = v;
+			}
+		}
+	}
+}
+
 void further_sparsify_conv2d(int IC, int OC, int* __restrict__ W_idx_OC, int16_t* __restrict__ W_idx_IC,
 							 uint8_t* __restrict__ W_idx_X, uint8_t* __restrict__ W_idx_Y,float* __restrict__ W_val,
 							 int* __restrict__ W_idx_OC_new, int16_t* __restrict__ W_idx_IC_new,
@@ -170,6 +192,27 @@ void sparsify_conv2d_wrapper(int OC, int IC, int K, py::array_t<float> W, py::ar
     float* ptr_W= (float*) buf_W.ptr;
 
     sparsify_conv2d(IC, OC, K, ptr_W, ptr_W_idx_OC, ptr_W_idx_IC, ptr_W_idx_X, ptr_W_idx_Y, ptr_W_val);
+}
+
+void densify_conv2d_wrapper(int OC, int IC, int K, py::array_t<float> W, py::array_t<int> W_idx_OC,
+						 py::array_t<int16_t> W_idx_IC, py::array_t<uint8_t> W_idx_X,
+						 py::array_t<uint8_t> W_idx_Y,py::array_t<float> W_val) {
+
+    auto buf_W = W.request();
+    auto buf_W_idx_OC = W_idx_OC.request();
+    auto buf_W_idx_IC = W_idx_IC.request();
+    auto buf_W_idx_X = W_idx_X.request();
+    auto buf_W_idx_Y = W_idx_Y.request();
+    auto buf_W_val = W_val.request();
+
+    int* ptr_W_idx_OC = (int*) buf_W_idx_OC.ptr;
+    int16_t* ptr_W_idx_IC = (int16_t*) buf_W_idx_IC.ptr;
+    uint8_t* ptr_W_idx_X = (uint8_t*) buf_W_idx_X.ptr;
+    uint8_t* ptr_W_idx_Y = (uint8_t*) buf_W_idx_Y.ptr;
+    float* ptr_W_val = (float*) buf_W_val.ptr;
+    float* ptr_W= (float*) buf_W.ptr;
+
+    densify_conv2d(IC, OC, K, ptr_W, ptr_W_idx_OC, ptr_W_idx_IC, ptr_W_idx_X, ptr_W_idx_Y, ptr_W_val);
 }
 
 void further_sparsify_conv2d_wrapper(int OC, int IC, py::array_t<int> W_idx_OC, py::array_t<int16_t> W_idx_IC,
