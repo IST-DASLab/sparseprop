@@ -83,7 +83,7 @@ The most important arguments of this script are:
 - `--output-dir`: Path to a directory where you wish to write the results.
 - `--run-dense`: You can use this argument to run this script without *SparseProp*.
 
-For the complete list of arguments, refer to [here](https://github.com/IST-DASLab/sparseprop/blob/96a8f545461847effe863e4471d1cd80b33fc0a2/examples/finetune_resnet18_imagenette_95_uniform.py#L16).
+Read the script for a complete list of arguments.
 
 In addition to the loss and accuracy metrics, this script also reports the time spent in each part of the process. The timings include:
 
