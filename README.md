@@ -1,6 +1,6 @@
 # *SparseProp*
 
-Official implementation of the paper *"SparseProp: Efficient Sparse Backpropagation for Faster Training of Neural Networks"*.
+Official implementation of the paper *"SparseProp: Efficient Sparse Backpropagation for Faster Training of Neural Networks at the Edge"*.
 
 This library provides fast PyTorch modules exploiting sparse backpropagation algorithms described in the paper.
 
