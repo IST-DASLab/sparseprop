@@ -89,6 +89,10 @@ def swap_modules_with_sparse(network, input_shape, inplace=False, skip_modules=N
                 if name == sm.strip():
                     found = True
                     break
+        
+        if verbose:
+            print('-' * 30)
+
         if found:
             print(f'Skipped {name}.')
             continue

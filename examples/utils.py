@@ -34,7 +34,7 @@ class Finetuner:
                 lambda n, m: (m.weight.data != 0).float()
             )
 
-    def _step(self, inputs, targets, phase, timings=None):
+    def _step(self, inputs, targets, phase, timings=None, profile=False):
         assert phase in ['train', 'test']
         train = phase == 'train'
 
@@ -45,13 +45,26 @@ class Finetuner:
             self._optimizer.zero_grad()
 
         with Timer(timings, 'end_to_end_forward'):
-            outputs = self._model(inputs)
+            if profile:
+                with torch.autograd.profiler.profile() as prof:
+                    outputs = self._model(inputs)
+                print("================================================ Forward Profile ================================================")
+                print(prof.key_averages().table(sort_by="self_cpu_time_total", row_limit=10))
+            else:
+                outputs = self._model(inputs)
+            
         
         loss = self._loss_fn(outputs, targets)
 
         with Timer(timings, 'end_to_end_backward'):
             if train:
-                loss.backward()
+                if profile:
+                    with torch.autograd.profiler.profile() as prof:
+                        loss.backward()
+                    print("================================================ Backward Profile ================================================")
+                    print(prof.key_averages().table(sort_by="self_cpu_time_total", row_limit=10))
+                else:
+                    loss.backward()
         
         if train:
             self._optimizer.step()
@@ -268,13 +281,14 @@ class WrappedModel(torch.nn.Module):
 
 
 class Logger:
-    def __init__(self, outdir):
+    def __init__(self, outdir=None):
         self._outdir = outdir
     
     def log(self, l):
-        with open(os.path.join(self._outdir, 'log.txt'), 'a') as f:
-            f.write(l)
-            f.write('\n')
+        if self._outdir is not None:
+            with open(os.path.join(self._outdir, 'log.txt'), 'a') as f:
+                f.write(l)
+                f.write('\n')
         print(l)
 
 def apply_to_all_modules_with_types(model, module_classes, func):
