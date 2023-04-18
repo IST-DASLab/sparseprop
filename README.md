@@ -15,6 +15,8 @@ This library provides fast PyTorch modules exploiting sparse backpropagation alg
 
 ## Usage
 
+__Check out our [tutorial notebook](https://github.com/IST-DASLab/sparseprop/blob/main/examples/notebook.ipynb) for a simple and step-by-step guide on how to use *SparseProp*.__
+
 #### Sparsifying a single layer
 If you have a sparse *Linear* module called `linear`, you can easily convert is to a *SparseLinear* module using the `from_dense` method.
 ```
