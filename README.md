@@ -7,7 +7,7 @@ Official implementation of the paper *"SparseProp: Efficient Sparse Backpropagat
 This library provides fast PyTorch modules exploiting sparse backpropagation algorithms described in the paper.
 
 ## Installation
-1. Make sure you have PyTorch installed (Refer to the [PyTorch website](https://pytorch.org)). A CPU version will suffice for our purpose.
+1. Make sure you have PyTorch installed (refer to the [PyTorch website](https://pytorch.org)). A CPU version will suffice for our purpose.
 2. Install *SparseProp*:
     ```
     pip install sparseprop
@@ -18,7 +18,7 @@ This library provides fast PyTorch modules exploiting sparse backpropagation alg
 __Check out our [tutorial notebook](https://github.com/IST-DASLab/sparseprop/blob/main/examples/notebook.ipynb) for a simple and step-by-step guide on how to use *SparseProp*.__
 
 #### Sparsifying a single layer
-If you have a sparse *Linear* module called `linear`, you can easily convert is to a *SparseLinear* module using the `from_dense` method.
+If you have a sparse *Linear* module called `linear`, you can easily convert it to a *SparseLinear* module using the `from_dense` method.
 ```
 from sparseprop.modules import SparseLinear
 
